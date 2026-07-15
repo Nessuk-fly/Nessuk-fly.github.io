@@ -1,4 +1,3 @@
-<!b>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
