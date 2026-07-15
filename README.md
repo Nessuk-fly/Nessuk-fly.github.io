@@ -19,6 +19,10 @@ body{
     font-size:72px;
     font-weight:bold;
     margin-bottom:20px;
+    <div style="margin-bottom:15px;">
+<input id="timeInput" type="number" value="45" min="1" style="width:70px;font-size:18px;text-align:center;">
+<button onclick="setTime()">Ustaw</button>
+</div>
 }
 button{
     font-size:18px;
@@ -49,6 +53,12 @@ function update(){
     document.getElementById("timer").textContent=
     String(m).padStart(2,"0")+":"+
     String(s).padStart(2,"0");
+
+    function setTime(){
+    clearInterval(interval);
+    seconds = parseInt(document.getElementById("timeInput").value);
+    update();
+    }
 }
 
 function start(){
@@ -59,14 +69,24 @@ function start(){
             update();
         }else{
             clearInterval(interval);
+beep();;
         }
     },1000);
 }
 
 function reset(){
     clearInterval(interval);
-    seconds=45;
+    seconds = parseInt(document.getElementById("timeInput").value);
     update();
+}
+    function beep(){
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    osc.connect(ctx.destination);
+    osc.frequency.value = 800;
+    osc.start();
+    osc.stop(ctx.currentTime + 0.3);
+    }
 }
 
 update();
