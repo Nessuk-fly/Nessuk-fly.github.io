@@ -1,4 +1,4 @@
-<CZASOMIERZ>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
@@ -19,10 +19,12 @@ body{
     font-size:72px;
     font-weight:bold;
     margin-bottom:20px;
-    <div style="margin-bottom:15px;">
-<input id="timeInput" type="number" value="45" min="1" style="width:70px;font-size:18px;text-align:center;">
-<button onclick="setTime()">Ustaw</button>
-</div>
+}
+input{
+    width:60px;
+    font-size:18px;
+    text-align:center;
+    margin:5px;
 }
 button{
     font-size:18px;
@@ -35,6 +37,11 @@ button{
 </style>
 </head>
 <body>
+
+<div>
+<input type="number" id="minutes" min="0" value="0"> :
+<input type="number" id="secondsInput" min="0" max="59" value="45">
+</div>
 
 <div id="timer">00:45</div>
 
@@ -53,40 +60,53 @@ function update(){
     document.getElementById("timer").textContent=
     String(m).padStart(2,"0")+":"+
     String(s).padStart(2,"0");
+}
 
-    function setTime(){
-    clearInterval(interval);
-    seconds = parseInt(document.getElementById("timeInput").value);
-    update();
-    }
+function beep(){
+    const audio=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=audio.createOscillator();
+    const gain=audio.createGain();
+
+    osc.connect(gain);
+    gain.connect(audio.destination);
+
+    osc.frequency.value=1000;
+    osc.start();
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        audio.currentTime+0.25
+    );
+
+    osc.stop(audio.currentTime+0.25);
 }
 
 function start(){
     clearInterval(interval);
+
+    let m=parseInt(document.getElementById("minutes").value)||0;
+    let s=parseInt(document.getElementById("secondsInput").value)||0;
+
+    seconds=m*60+s;
+    update();
+
     interval=setInterval(()=>{
         if(seconds>0){
             seconds--;
             update();
         }else{
             clearInterval(interval);
-beep();;
+            beep();
         }
     },1000);
 }
 
 function reset(){
     clearInterval(interval);
-    seconds = parseInt(document.getElementById("timeInput").value);
+    let m=parseInt(document.getElementById("minutes").value)||0;
+    let s=parseInt(document.getElementById("secondsInput").value)||0;
+    seconds=m*60+s;
     update();
-}
-    function beep(){
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    osc.connect(ctx.destination);
-    osc.frequency.value = 800;
-    osc.start();
-    osc.stop(ctx.currentTime + 0.3);
-    }
 }
 
 update();
