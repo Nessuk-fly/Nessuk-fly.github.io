@@ -18,12 +18,13 @@ body{
 #timer{
     font-size:72px;
     font-weight:bold;
-    margin-bottom:20px;
+    margin:20px 0;
 }
 input{
     width:60px;
     font-size:18px;
     text-align:center;
+    padding:5px;
     margin:5px;
 }
 button{
@@ -71,13 +72,9 @@ function beep(){
     gain.connect(audio.destination);
 
     osc.frequency.value=1000;
+    gain.gain.value=0.2;
+
     osc.start();
-
-    gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        audio.currentTime+0.25
-    );
-
     osc.stop(audio.currentTime+0.25);
 }
 
@@ -103,14 +100,5 @@ function start(){
 
 function reset(){
     clearInterval(interval);
-    let m=parseInt(document.getElementById("minutes").value)||0;
-    let s=parseInt(document.getElementById("secondsInput").value)||0;
-    seconds=m*60+s;
-    update();
-}
 
-update();
-</script>
-
-</body>
-</html>
+    let m=parseInt(document.getElementById("minutes
