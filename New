@@ -1,0 +1,112 @@
+<Czasomierz>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Timer</title>
+
+<style>
+body{
+    margin:0;
+    background:#191919;
+    color:white;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    text-align:center;
+}
+
+#timer{
+    font-size:70px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+button{
+    font-size:22px;
+    margin:5px;
+    padding:10px 18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <div id="timer">00:45</div>
+
+    <button onclick="minus()">-</button>
+    <button onclick="plus()">+</button>
+    <br>
+
+    <button onclick="start()">Start</button>
+    <button onclick="pause()">Pauza</button>
+    <button onclick="reset()">Reset</button>
+</div>
+
+<script>
+
+let seconds = 45;
+let interval = null;
+
+function update(){
+    let m = Math.floor(seconds/60);
+    let s = seconds%60;
+
+    document.getElementById("timer").textContent =
+        String(m).padStart(2,"0")+":"+
+        String(s).padStart(2,"0");
+}
+
+function start(){
+    if(interval) return;
+
+    interval = setInterval(function(){
+
+        if(seconds>0){
+            seconds--;
+            update();
+        }else{
+            clearInterval(interval);
+            interval=null;
+        }
+
+    },1000);
+}
+
+function pause(){
+    clearInterval(interval);
+    interval=null;
+}
+
+function reset(){
+    pause();
+    seconds=45;
+    update();
+}
+
+function plus(){
+    seconds++;
+    update();
+}
+
+function minus(){
+    if(seconds>0){
+        seconds--;
+        update();
+    }
+}
+
+update();
+
+</script>
+
+</body>
+</html>
